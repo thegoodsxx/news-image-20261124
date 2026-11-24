@@ -1,11 +1,14 @@
 // news-image-20261124: Tuesday 24 November 2026
-// Copies the broadsheet front page entry.png to the target MAKEFUN_OUTPUT_DIR directory.
+// Sums up 24 November 2026 world news in a broadsheet front-page poster by copying entry.png to the target MAKEFUN_OUTPUT_DIR directory.
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 mkdirSync(outDir, { recursive: true });
+if (!existsSync(outDir)) {
+  throw new Error(`Output directory could not be created or found: ${outDir}`);
+}
 
 const srcUrl = new URL('./entry.png', import.meta.url);
 if (!existsSync(srcUrl)) {
