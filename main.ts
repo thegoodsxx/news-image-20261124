@@ -12,10 +12,14 @@ if (!existsSync(srcUrl)) {
   throw new Error(`Source poster not found: ${srcUrl.pathname}`);
 }
 
+const srcStats = statSync(srcUrl);
+if (srcStats.size === 0) {
+  throw new Error(`Source poster is empty: ${srcUrl.pathname}`);
+}
+
 const destPath = join(outDir, 'entry.png');
 copyFileSync(srcUrl, destPath);
 
-const srcStats = statSync(srcUrl);
 const destStats = statSync(destPath);
 if (destStats.size !== srcStats.size) {
   throw new Error(`Copied output size mismatch: expected ${srcStats.size} bytes, got ${destStats.size} bytes`);
@@ -28,3 +32,5 @@ for (let i = 0; i < pngMagic.length; i++) {
     throw new Error(`Invalid PNG magic bytes at byte index ${i}: expected 0x${pngMagic[i].toString(16)}, got 0x${outputBytes[i]?.toString(16)}`);
   }
 }
+
+console.log(`Copied ${destStats.size} bytes to ${destPath}`);
